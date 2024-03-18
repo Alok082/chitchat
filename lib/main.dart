@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(colorScheme: darkColorScheme),
+      // darkTheme: ThemeData(colorScheme: darkColorScheme),
       initialRoute: AppRoutes.initialroute,
       getPages: AppRoutes.pages,
     );

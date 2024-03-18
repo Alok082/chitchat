@@ -18,6 +18,7 @@ class AuthController extends GetxController {
       isloading = true;
       update();
       await InternetAddress.lookup("google.com");
+
       // var connectivityResult = await Connectivity().checkConnectivity();
       // if (connectivityResult != ConnectivityResult.none) {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -43,6 +44,9 @@ class AuthController extends GetxController {
       isloading = false;
       update();
       return null;
+    } finally {
+      isloading = false;
+      update();
     }
     // Trigger the authentication flow
   }
@@ -62,6 +66,8 @@ class AuthController extends GetxController {
       });
     } catch (e) {
       DynamicHelperWidget.show("Check Your Internet Connection");
+      isloading = false;
+      update();
     } finally {
       isloading = false;
       update();

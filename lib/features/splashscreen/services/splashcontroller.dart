@@ -5,14 +5,14 @@ class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    userdetail();
+    // userdetail();
   }
 
   // print firebase user details
-  void userdetail() {
-    print("object");
-    if (FirebaseAuth.instance.currentUser != null) {
-      print("user : ${FirebaseAuth.instance.currentUser}");
-    }
-  }
+  // void userdetail() {
+  //   print("object");
+  //   if (FirebaseAuth.instance.currentUser != null) {
+  //     print("user : ${FirebaseAuth.instance.currentUser}");
+  //   }
+  // }
 }

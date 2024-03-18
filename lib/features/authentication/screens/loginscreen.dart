@@ -51,9 +51,7 @@ class LoginScreen extends StatelessWidget {
                         buttonicon: "asset/icons/google.png",
                         button_name: "Sign In With Google",
                         buttonaction: () {
-                          locator<AuthController>()
-                              .signInWithGoogle()
-                              .then((user) async {
+                          _controller.signInWithGoogle().then((user) async {
                             if (user != null) {
                               if ((await FirebaseServises.userexist())) {
                                 _controller.loadingfalse;

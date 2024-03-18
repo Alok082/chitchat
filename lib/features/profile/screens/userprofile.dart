@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:chitchat/dependency_injection.dart';
 import 'package:chitchat/features/authentication/services/authcontroller.dart';
+import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../shared/buttons/elavatedbutton.dart';
 
 class UserProfile extends StatelessWidget {
+  final formkey = GlobalKey<FormState>();
   final UserData userData = Get.arguments;
 
   UserProfile({
@@ -21,16 +23,22 @@ class UserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     var _authcontroller = locator<AuthController>();
     var mq = MediaQuery.sizeOf(context);
-    return GetBuilder<AuthController>(
-        init: AuthController(),
-        builder: (context) {
-          return Scaffold(
-              endDrawerEnableOpenDragGesture: false,
-              body: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Stack(
-                  children: [
-                    SingleChildScrollView(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: GetBuilder<AuthController>(
+          // init: AuthController(),
+          builder: (context) {
+        return Scaffold(
+            endDrawerEnableOpenDragGesture: false,
+            body: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Form(
+                      key: formkey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -94,6 +102,16 @@ class UserProfile extends StatelessWidget {
                           ),
                           SizedBox(height: 50.0),
                           TextFormField(
+                            onSaved: (newValue) {
+                              FirebaseServises.me.name = newValue ?? '';
+                            },
+                            validator: (val) {
+                              if (val != null && val.isNotEmpty) {
+                                return null;
+                              } else {
+                                return 'required field';
+                              }
+                            },
                             initialValue: userData.name,
                             // controller: controller,
                             textAlign: TextAlign.start,
@@ -132,6 +150,16 @@ class UserProfile extends StatelessWidget {
                           ),
                           SizedBox(height: 30.0),
                           TextFormField(
+                            onSaved: (newValue) {
+                              FirebaseServises.me.about = newValue ?? '';
+                            },
+                            validator: (val) {
+                              if (val != null && val.isNotEmpty) {
+                                return null;
+                              } else {
+                                return 'required field';
+                              }
+                            },
                             initialValue: userData.about,
 
                             // controller: controller,
@@ -184,7 +212,14 @@ class UserProfile extends StatelessWidget {
                             child: Material(
                               color: Colors.transparent,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (formkey.currentState!.validate()) {
+                                    formkey.currentState!.save();
+                                    FirebaseServises.updateuserinfo();
+
+                                    print("updated");
+                                  }
+                                },
                                 style: ElevatedButton.styleFrom(
                                   alignment: Alignment.center,
                                   backgroundColor: Colors.transparent,
@@ -226,52 +261,53 @@ class UserProfile extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Positioned(
-                        right: mq.width * 0.01,
-                        top: mq.height * 0.02,
-                        child: IconButton(
-                            onPressed: () {
-                              locator<AuthController>().signout();
-                            },
-                            icon: Icon(Icons.logout))),
-                    Visibility(
-                      visible: _authcontroller.isloading == true,
-                      child: Container(
-                        height: mq.height * 1,
-                        width: mq.width * 1,
-                        decoration: BoxDecoration(),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                          child: Container(
-                            color: Color.fromARGB(255, 168, 209, 241)
-                                .withOpacity(
-                                    0.4), // Adjust the opacity as needed
-                          ),
+                  ),
+                  Positioned(
+                      right: mq.width * 0.01,
+                      top: mq.height * 0.02,
+                      child: IconButton(
+                          onPressed: () {
+                            locator<AuthController>().signout();
+                          },
+                          icon: Icon(Icons.logout))),
+                  Visibility(
+                    visible: _authcontroller.isloading == true,
+                    child: Container(
+                      height: mq.height * 1,
+                      width: mq.width * 1,
+                      decoration: BoxDecoration(),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                        child: Container(
+                          color: Color.fromARGB(255, 168, 209, 241)
+                              .withOpacity(0.4), // Adjust the opacity as needed
                         ),
                       ),
                     ),
-                    Visibility(
-                        visible: _authcontroller.isloading == true,
-                        child: Center(
-                            child: CupertinoActivityIndicator(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          radius: 15,
-                        )))
-                  ],
-                ),
-              )
-              // Center(
-              //     child: Container(
-              //   height: 50,
-              //   width: 200,
-              //   child: ElavatedButton(
-              //     button_name: "signout",
-              //     buttonaction: () {
-              //       locator<AuthController>().signout();
-              //     },
-              //   ),
-              // )),
-              );
-        });
+                  ),
+                  Visibility(
+                      visible: _authcontroller.isloading == true,
+                      child: Center(
+                          child: CupertinoActivityIndicator(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        radius: 15,
+                      )))
+                ],
+              ),
+            )
+            // Center(
+            //     child: Container(
+            //   height: 50,
+            //   width: 200,
+            //   child: ElavatedButton(
+            //     button_name: "signout",
+            //     buttonaction: () {
+            //       locator<AuthController>().signout();
+            //     },
+            //   ),
+            // )),
+            );
+      }),
+    );
   }
 }
