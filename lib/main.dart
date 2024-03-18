@@ -16,8 +16,6 @@ void main() {
       .then((value) {
     setup();
     _initialisefirebase();
-
-    runApp(const MyApp());
   });
 }
 
@@ -46,4 +44,6 @@ _initialisefirebase() async {
               messagingSenderId: "942054459689",
               projectId: "chit-chat-3e42a"))
       : await Firebase.initializeApp();
+
+  runApp(const MyApp());
 }

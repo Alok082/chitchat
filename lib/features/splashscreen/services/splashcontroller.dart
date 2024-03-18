@@ -1,10 +1,18 @@
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SplashController extends GetxController {
+  @override
   void onInit() {
-    // super.onInit();
-    // Timer(Duration(seconds: 3), () {
-    //   Get.toNamed("/HomeScreen");
-    // });
+    super.onInit();
+    userdetail();
+  }
+
+  // print firebase user details
+  void userdetail() {
+    print("object");
+    if (FirebaseAuth.instance.currentUser != null) {
+      print("user : ${FirebaseAuth.instance.currentUser}");
+    }
   }
 }

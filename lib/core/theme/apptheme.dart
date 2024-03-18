@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color.fromARGB(255, 168, 209, 241),
+  primary: Color.fromARGB(255, 13, 18, 13),
   onPrimary: Color(0xFFFFFFFF),
   primaryContainer: Color.fromARGB(255, 30, 33, 51),
   onPrimaryContainer: Color(0xFF001F24),
@@ -20,8 +20,8 @@ const lightColorScheme = ColorScheme(
   onErrorContainer: Color(0xFF410002),
   background: Color.fromARGB(255, 168, 209, 241),
   onBackground: Color(0xFF191C1D),
-  surface: Color.fromARGB(255, 30, 33, 51),
-  onSurface: Color(0xFF191C1D),
+  surface: Color.fromARGB(255, 155, 155, 246),
+  onSurface: Color.fromARGB(255, 0, 0, 0),
   surfaceVariant: Color(0xFFDBE4E6),
   onSurfaceVariant: Color(0xFF3F484A),
   outline: Color(0xFF6F797A),

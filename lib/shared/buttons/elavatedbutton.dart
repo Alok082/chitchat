@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 class ElavatedButton extends StatelessWidget {
   String button_name;
   Function() buttonaction;
-  String? buttonicon;
 
   ElavatedButton({
     super.key,
     required this.button_name,
     required this.buttonaction,
-    this.buttonicon,
   });
 
   @override
@@ -52,13 +50,6 @@ class ElavatedButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Visibility(
-                    visible: buttonicon != " ",
-                    child: Image.asset(
-                      buttonicon ?? " ",
-                      height: 30,
-                    ),
-                  ),
                   SizedBox(
                     width: 8,
                   ),
