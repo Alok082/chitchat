@@ -14,6 +14,7 @@ class ChatUserCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
+        color: Color.fromARGB(255, 14, 13, 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

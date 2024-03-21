@@ -5,6 +5,7 @@ import 'package:chitchat/core/constants/constant.dart';
 import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:chitchat/features/homescreen/services/home_controller.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
+import 'package:chitchat/routes/app_routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
     var _controller = locator<HomeController>();
     return GestureDetector(
       onTap: () {
-        FocusManager.instance.primaryFocus!.unfocus();
-        _controller.changeSearch();
+        if (_controller.isSearching) {
+          FocusManager.instance.primaryFocus!.unfocus();
+          _controller.changeSearch();
+        }
       },
       child: GetBuilder<HomeController>(
           init: HomeController(),
@@ -168,10 +171,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ? _controller.searchlist.length
                                           : _controller.userdatalist.length,
                                       itemBuilder: (context, index) {
-                                        return ChatUserCard(
-                                          userdata: _controller.isSearching
-                                              ? _controller.searchlist[index]
-                                              : _controller.userdatalist[index],
+                                        return InkWell(
+                                          onTap: () {
+                                            Get.toNamed(AppRoutes.chatScreen,
+                                                arguments: _controller
+                                                    .userdatalist[index]);
+                                          },
+                                          child: ChatUserCard(
+                                            userdata: _controller.isSearching
+                                                ? _controller.searchlist[index]
+                                                : _controller
+                                                    .userdatalist[index],
+                                          ),
                                         );
                                       },
                                     );

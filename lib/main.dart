@@ -11,12 +11,25 @@ import 'routes/app_routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((value) {
-    setup();
-    _initialisefirebase();
-  });
+  Firebase.initializeApp(
+          options: const FirebaseOptions(
+              apiKey: "AIzaSyBJkpPGkE7b8H3MdK-b9oI_7lD5uekhMtw",
+              appId: "1:942054459689:android:c2a184d8e1474b03c6cf38",
+              messagingSenderId: "942054459689",
+              projectId: "chit-chat-3e42a",
+              storageBucket: "chit-chat-3e42a.appspot.com"))
+      .then(
+    (value) {
+      setup();
+      runApp(const MyApp());
+    },
+  );
+  // SystemChrome.setPreferredOrientations(
+  //         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+  //     .then((value) {
+
+  // _initialisefirebase();
+  // });
 }
 
 class MyApp extends StatelessWidget {
@@ -24,6 +37,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -36,14 +53,15 @@ class MyApp extends StatelessWidget {
 }
 
 _initialisefirebase() async {
-  Platform.isAndroid
-      ? await Firebase.initializeApp(
-          options: const FirebaseOptions(
-              apiKey: "AIzaSyBJkpPGkE7b8H3MdK-b9oI_7lD5uekhMtw",
-              appId: "1:942054459689:android:c2a184d8e1474b03c6cf38",
-              messagingSenderId: "942054459689",
-              projectId: "chit-chat-3e42a"))
-      : await Firebase.initializeApp();
+  // Platform.isAndroid
+  //     ? await Firebase.initializeApp(
+  // options: const FirebaseOptions(
+  //     apiKey: "AIzaSyBJkpPGkE7b8H3MdK-b9oI_7lD5uekhMtw",
+  //     appId: "1:942054459689:android:c2a184d8e1474b03c6cf38",
+  //     messagingSenderId: "942054459689",
+  //     projectId: "chit-chat-3e42a",
+  //     storageBucket: "chit-chat-3e42a.appspot.com"))
+  //     : null;
 
   runApp(const MyApp());
 }

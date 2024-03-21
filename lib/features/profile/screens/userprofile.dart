@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:chitchat/dependency_injection.dart';
 import 'package:chitchat/features/authentication/services/authcontroller.dart';
+import 'package:chitchat/features/profile/services/profilecontroller.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../shared/buttons/elavatedbutton.dart';
+import '../widgets/bottomsheet.dart';
 
 class UserProfile extends StatelessWidget {
   final formkey = GlobalKey<FormState>();
@@ -22,6 +25,8 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _authcontroller = locator<AuthController>();
+    var _profileController = locator<ProfileController>();
+
     var mq = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
@@ -29,7 +34,7 @@ class UserProfile extends StatelessWidget {
       },
       child: GetBuilder<AuthController>(
           // init: AuthController(),
-          builder: (context) {
+          builder: (_) {
         return Scaffold(
             endDrawerEnableOpenDragGesture: false,
             body: Padding(
@@ -46,29 +51,42 @@ class UserProfile extends StatelessWidget {
                           Stack(
                             alignment: Alignment.bottomRight,
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                height: mq.height * 0.22,
-                                width: mq.width * 0.45,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(100)),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: CachedNetworkImage(
-                                    // height: ,
-                                    fit: BoxFit.fill,
-                                    imageUrl: userData.image,
-                                    placeholder: (context, url) =>
-                                        CupertinoActivityIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        Image.asset(
-                                      'asset/icons/applogo.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              GetBuilder<ProfileController>(
+                                  init: ProfileController(),
+                                  builder: (context) {
+                                    return Container(
+                                      padding: EdgeInsets.all(5),
+                                      height: mq.height * 0.22,
+                                      width: mq.width * 0.45,
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: _profileController.image != null
+                                            ? Image.file(
+                                                File(_profileController.image!),
+                                                fit: BoxFit.cover,
+                                              )
+                                            : CachedNetworkImage(
+                                                // height: ,
+                                                fit: BoxFit.fill,
+                                                imageUrl: userData.image,
+                                                placeholder: (context, url) =>
+                                                    CupertinoActivityIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Image.asset(
+                                                  'asset/icons/applogo.png',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                      ),
+                                    );
+                                  }),
                               Container(
                                 margin: EdgeInsets.only(right: 10, bottom: 10),
                                 // padding: EdgeInsets.all(5),
@@ -85,6 +103,7 @@ class UserProfile extends StatelessWidget {
                                       size: 60,
                                     ),
                                     onPressed: () {
+                                      Bottomsheet.showsheet(context);
                                       // Handle edit profile picture
                                     },
                                   ),
