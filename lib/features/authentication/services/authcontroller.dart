@@ -58,7 +58,7 @@ class AuthController extends GetxController {
       await InternetAddress.lookup("google.com");
       await FirebaseServises.auth.signOut().then((value) async {
         await GoogleSignIn().signOut().then((value) {
-          Get.offAndToNamed("/LoginScreen");
+          Get.offAllNamed("/LoginScreen");
           isloading = false;
           update();
           DynamicHelperWidget.show("Succeccfully Logged Out");

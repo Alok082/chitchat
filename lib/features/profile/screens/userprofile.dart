@@ -57,7 +57,7 @@ class UserProfile extends StatelessWidget {
                                     return Container(
                                       padding: EdgeInsets.all(5),
                                       height: mq.height * 0.22,
-                                      width: mq.width * 0.45,
+                                      width: mq.height * 0.22,
                                       decoration: BoxDecoration(
                                           border:
                                               Border.all(color: Colors.black),

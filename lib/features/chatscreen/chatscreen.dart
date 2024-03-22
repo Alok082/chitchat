@@ -23,8 +23,8 @@ class ChatScreen extends StatelessWidget {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
     MediaQueryData mediaQuery = MediaQuery.of(context);
+    //for handling messages
     TextEditingController messagecontroller = TextEditingController();
-    final ScrollController scrollController = ScrollController();
 
     var _controller = locator<ChatController>();
     List<Message> _list = [];
@@ -122,34 +122,20 @@ class ChatScreen extends StatelessWidget {
                     //
                     Expanded(
                       child: StreamBuilder(
-                          stream: FirebaseServises.gettingallmessage(),
+                          stream: FirebaseServises.gettingallmessage(userdata),
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
                               case ConnectionState.waiting:
                               case ConnectionState.none:
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
+                                return SizedBox();
                               case ConnectionState.active:
                               case ConnectionState.done:
                                 final datas = snapshot.data?.docs;
-                                print(jsonEncode(datas![0].data()));
-                                _list.clear();
-                                _list.add(Message(
-                                    toId: "1254",
-                                    read: " ",
-                                    message: "hi",
-                                    type: Type.text,
-                                    sent: '2 am',
-                                    fromId: FirebaseServises.user.uid));
-                                _list.add(Message(
-                                    toId: "6548",
-                                    read: " ",
-                                    message: "hello",
-                                    type: Type.text,
-                                    sent: '5 am',
-                                    fromId: "587458"));
-                                // final temp = [];
+                                _list = datas!
+                                    .map((e) => Message.fromJson(e.data()))
+                                    .toList();
+                                // print(jsonEncode(datas![0].data()));
+
                                 if (_list.isNotEmpty) {
                                   return ListView.builder(
                                       shrinkWrap: true,
@@ -189,7 +175,9 @@ class ChatScreen extends StatelessWidget {
                           FocusManager.instance.primaryFocus!.unfocus();
                         },
                         onTap: () {
-                          _controller.settextfieldicon();
+                          if (_controller.iswriting == false) {
+                            _controller.settextfieldicon();
+                          }
                         },
                         decoration: InputDecoration(
                           prefixIcon: IconButton(
@@ -203,22 +191,15 @@ class ChatScreen extends StatelessWidget {
                           suffixIcon: _controller.iswriting
                               ? IconButton(
                                   onPressed: () {
-                                    // if (messagecontroller.text.isNotEmpty) {
-                                    //   _controller.addChatMessage("self",
-                                    //       messagecontroller.text, "4:08 AM");
-                                    //   messagecontroller.clear();
-                                    //   scrollController.animateTo(
-                                    //     scrollController
-                                    //         .position.maxScrollExtent,
-                                    //     duration:
-                                    //         const Duration(milliseconds: 300),
-                                    //     curve: Curves.easeOut,
-                                    //   );
-                                    // }
-                                    // else {
-                                    //   DynamicHelperWidget.show(
-                                    //       "Message can't be empty");
-                                    // }
+                                    if (messagecontroller.text.isNotEmpty) {
+                                      print("started");
+                                      FirebaseServises.sendMessage(
+                                          userdata, messagecontroller.text);
+                                      messagecontroller.text = '';
+                                    } else {
+                                      DynamicHelperWidget.show(
+                                          "Message can't be empty");
+                                    }
                                   },
                                   icon: Icon(
                                     Icons.send,

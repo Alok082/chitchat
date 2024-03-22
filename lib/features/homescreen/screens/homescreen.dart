@@ -166,6 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                   if (_controller.userdatalist.isNotEmpty) {
                                     return ListView.builder(
+                                      physics: AlwaysScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: _controller.isSearching
                                           ? _controller.searchlist.length
