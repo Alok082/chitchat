@@ -49,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           init: HomeController(),
           builder: (_) {
             return Scaffold(
+              backgroundColor: Color.fromARGB(255, 168, 209, 241),
               body: Stack(
                 children: [
                   CustomScrollView(

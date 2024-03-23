@@ -104,11 +104,13 @@ class FirebaseServises {
       UserData userData) {
     return firestore
         .collection('chats/${getConversationId(userData.id)}/message/')
+        .orderBy('sent', descending: true)
         .snapshots();
   }
 
   // for sending message
-  static Future<void> sendMessage(UserData userdata, String msg) async {
+  static Future<void> sendMessage(
+      UserData userdata, String msg, Type type) async {
     //message sending time and also use for doc id
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -118,7 +120,7 @@ class FirebaseServises {
         toId: userdata.id,
         read: '',
         message: msg,
-        type: Type.text,
+        type: type,
         sent: time,
         fromId: user.uid);
     final ref = firestore
@@ -139,7 +141,33 @@ class FirebaseServises {
       UserData userData) {
     return firestore
         .collection('chats/${getConversationId(userData.id)}/message/')
+        .orderBy('sent', descending: true)
         .limit(1)
         .snapshots();
   }
+
+  //send chat image
+  static Future<void> sendChatImage(UserData userdata, File file) async {
+    final ext = file.path.split(".").last;
+
+    //storage file reference with path
+    final ref = storege.ref().child(
+        'images/${getConversationId(userdata.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    // uploading images
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+        .then((p0) {
+      print("Data Transferred : ${p0.bytesTransferred / 1000} kb");
+    });
+    //updating image in firebase database
+    final imageurl = await ref.getDownloadURL();
+    await sendMessage(userdata, imageurl, Type.image);
+  }
+
+  //online and last seen
+  //  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
+  //     UserData userData) {
+
+  // }
 }

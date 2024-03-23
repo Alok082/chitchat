@@ -1,13 +1,47 @@
+import 'dart:io';
+
+import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../firebaseservises/firebaseservice.dart';
+import '../../shared/widgets/helper.dart';
+
 class ChatController extends GetxController {
+  bool isUploading = false;
+  // for showing the emogi
+  bool showemogi = false;
   var isKeyboardVisible = false;
   bool iswriting = false;
   void settextfieldicon() {
     iswriting = !iswriting;
     update();
   }
+
+  void showEmogi() {
+    showemogi = !showemogi;
+  }
+
+  // for sending the message
+  String? image;
+  void sendimage(String fileimage, UserData userdata) async {
+    try {
+      isUploading = true;
+      update();
+      image = fileimage;
+      await FirebaseServises.sendChatImage(userdata, File(image!));
+      update();
+    } catch (e) {
+      DynamicHelperWidget.show("Unable to send images");
+    } finally {
+      isUploading = false;
+      update();
+    }
+
+    // DynamicHelperWidget.show("Profile Picture Updated Successfully");
+  }
+
+  void uploading() {}
 
   // void addChatMessage(String sender, String text, String time) {
   //   ChatMessage newMessage = ChatMessage(
@@ -63,4 +97,3 @@ class ChatController extends GetxController {
 }
 
 //model class for chat screen
-

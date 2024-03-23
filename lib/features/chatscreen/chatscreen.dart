@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/core/models/message.dart';
 import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:chitchat/features/chatscreen/chat_Controller.dart';
 import 'package:chitchat/shared/widgets/helper.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
@@ -14,15 +18,19 @@ import '../../dependency_injection.dart';
 import '../../firebaseservises/firebaseservice.dart';
 import 'widgets/bottomsheet_widget.dart';
 import 'widgets/message_card.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
   final UserData userdata = Get.arguments;
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
     MediaQueryData mediaQuery = MediaQuery.of(context);
+
     //for handling messages
     TextEditingController messagecontroller = TextEditingController();
 
@@ -135,12 +143,28 @@ class ChatScreen extends StatelessWidget {
                                     .map((e) => Message.fromJson(e.data()))
                                     .toList();
                                 // print(jsonEncode(datas![0].data()));
+                                // SchedulerBinding.instance
+                                //     .addPostFrameCallback((_) {
+                                //   _scrollController.animateTo(
+                                //     _scrollController.position.maxScrollExtent,
+                                //     duration: const Duration(milliseconds: 100),
+                                //     curve: Curves.linear,
+                                //   );
+                                // });
 
                                 if (_list.isNotEmpty) {
                                   return ListView.builder(
+                                      controller: _scrollController,
                                       shrinkWrap: true,
+                                      reverse: true,
                                       itemCount: _list.length,
                                       itemBuilder: (context, index) {
+                                        // _scrollController.animateTo(
+                                        //   _scrollController
+                                        //       .position.maxScrollExtent,
+                                        //   duration: Duration(milliseconds: 300),
+                                        //   curve: Curves.easeOut,
+                                        // );
                                         return MessageCard(
                                           message: _list[index],
                                         );
@@ -156,6 +180,31 @@ class ChatScreen extends StatelessWidget {
                             }
                           }),
                     ),
+                    if (_controller.isUploading == true)
+                      Container(
+                        height: 50,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 30, 29, 40),
+                            borderRadius: BorderRadius.circular(18)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Uploading",
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            CupertinoActivityIndicator(
+                              color: Colors.white,
+                              radius: 15,
+                            ),
+                          ],
+                        ),
+                      ),
                     Container(
                       // margin: EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -181,7 +230,9 @@ class ChatScreen extends StatelessWidget {
                         },
                         decoration: InputDecoration(
                           prefixIcon: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _controller.showEmogi();
+                              },
                               icon: Icon(
                                 Icons.emoji_emotions_outlined,
                                 size: 25,
@@ -192,10 +243,9 @@ class ChatScreen extends StatelessWidget {
                               ? IconButton(
                                   onPressed: () {
                                     if (messagecontroller.text.isNotEmpty) {
-                                      print("started");
-                                      FirebaseServises.sendMessage(
-                                          userdata, messagecontroller.text);
-                                      messagecontroller.text = '';
+                                      FirebaseServises.sendMessage(userdata,
+                                          messagecontroller.text, Type.text);
+                                      // messagecontroller.text = '';
                                     } else {
                                       DynamicHelperWidget.show(
                                           "Message can't be empty");
@@ -207,7 +257,8 @@ class ChatScreen extends StatelessWidget {
                                   ))
                               : IconButton(
                                   onPressed: () {
-                                    ChatBottomsheet.showsheet(context);
+                                    ChatBottomsheet.showsheet(
+                                        context, userdata);
                                   },
                                   icon: Icon(
                                     Icons.add_circle_outline_rounded,
@@ -226,6 +277,35 @@ class ChatScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    EmojiPicker(
+                      onEmojiSelected: (Category? category, Emoji emoji) {
+                        // Do something when emoji is tapped (optional)
+                      },
+                      onBackspacePressed: () {
+                        // Do something when the user taps the backspace button (optional)
+                        // Set it to null to hide the Backspace-Button
+                      },
+                      textEditingController:
+                          messagecontroller, // pass here the same [TextEditingController] that is connected to your input field, usually a [TextFormField]
+                      config: Config(
+                        height: 256,
+                        checkPlatformCompatibility: true,
+                        emojiViewConfig: EmojiViewConfig(
+                          // Issue: https://github.com/flutter/flutter/issues/28894
+                          emojiSizeMax: 28 *
+                              (foundation.defaultTargetPlatform ==
+                                      TargetPlatform.iOS
+                                  ? 1.20
+                                  : 1.0),
+                        ),
+                        swapCategoryAndBottomBar: false,
+                        skinToneConfig: const SkinToneConfig(),
+                        categoryViewConfig: const CategoryViewConfig(),
+                        bottomActionBarConfig: const BottomActionBarConfig(),
+                        searchViewConfig: const SearchViewConfig(),
+                      ),
+                    )
                   ],
                 ),
               );

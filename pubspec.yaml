@@ -49,6 +49,7 @@ dependencies:
   sqflite: ^2.3.2
   image_picker: ^1.0.7
   firebase_storage: ^11.6.10
+  emoji_picker_flutter: ^2.1.1
 
 dev_dependencies:
   flutter_test:

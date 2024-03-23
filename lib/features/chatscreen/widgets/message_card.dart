@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,11 +39,27 @@ class MessageCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  message.message,
-                  style: TextStyle(
-                      fontSize: 16, color: Color.fromARGB(255, 255, 255, 255)),
-                ),
+                message.type == Type.text
+                    ? Text(
+                        message.message,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: CachedNetworkImage(
+                          // height: ,
+                          fit: BoxFit.fill,
+                          imageUrl: message.message,
+                          placeholder: (context, url) =>
+                              CupertinoActivityIndicator(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            'asset/icons/applogo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                 Visibility(
                   visible: message.read.isNotEmpty,
                   child: Icon(
@@ -96,11 +113,27 @@ class MessageCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  message.message,
-                  style: TextStyle(
-                      fontSize: 16, color: Color.fromARGB(255, 255, 255, 255)),
-                ),
+                message.type == Type.text
+                    ? Text(
+                        message.message,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: CachedNetworkImage(
+                          // height: ,
+                          fit: BoxFit.fill,
+                          imageUrl: message.message,
+                          placeholder: (context, url) =>
+                              CupertinoActivityIndicator(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            'asset/icons/applogo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                 Visibility(
                   visible: message.read.isNotEmpty,
                   child: Icon(

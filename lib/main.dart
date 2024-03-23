@@ -9,7 +9,6 @@ import 'core/theme/apptheme.dart';
 import 'dependency_injection.dart';
 import 'routes/app_routes.dart';
 
-late Size mq;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp(
@@ -38,7 +37,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.sizeOf(context);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
