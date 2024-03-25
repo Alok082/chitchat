@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:chitchat/shared/widgets/helper.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../core/constants/constant.dart';
 import '../../../firebaseservises/firebaseservice.dart';
 
 class AuthController extends GetxController {
@@ -52,6 +50,8 @@ class AuthController extends GetxController {
   }
 
   void signout() async {
+    await FirebaseServises.updateActiveStatus(false);
+
     try {
       isloading = true;
       update();
@@ -62,6 +62,7 @@ class AuthController extends GetxController {
           isloading = false;
           update();
           DynamicHelperWidget.show("Succeccfully Logged Out");
+          FirebaseServises.auth = FirebaseAuth.instance;
         });
       });
     } catch (e) {

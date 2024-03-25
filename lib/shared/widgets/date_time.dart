@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyDateTime {
@@ -11,7 +10,9 @@ class MyDateTime {
 
   // getting last message time
   static String lastMessageTime(
-      {required BuildContext context, required String time}) {
+      {required BuildContext context,
+      required String time,
+      bool showyear = false}) {
     final sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
     if (now.day == sent.day &&
@@ -20,7 +21,9 @@ class MyDateTime {
       return TimeOfDay.fromDateTime(sent).format(context);
     }
 
-    return '${sent.day} ${getMonth(sent)}';
+    return showyear
+        ? '${sent.day} ${getMonth(sent)} ${sent.year}'
+        : '${sent.day} ${getMonth(sent)}';
   }
   // getting month
 
@@ -51,7 +54,28 @@ class MyDateTime {
       case 12:
         return 'Dec';
       default:
-        return 'Invalid Month';
+        return 'NA';
     }
+  }
+
+  // last active time of user
+  static String getLastActiveTime(
+      {required BuildContext context, required String lastActive}) {
+    final int i = int.tryParse(lastActive) ?? -1;
+    // if time is not available
+    if (i == -1) return 'Last seen not available';
+    DateTime time = DateTime.fromMillisecondsSinceEpoch(i);
+    DateTime now = DateTime.now();
+    String formattedTime = TimeOfDay.fromDateTime(time).format(context);
+    if (time.day == now.day &&
+        time.month == now.month &&
+        time.year == now.year) {
+      return 'Last seen today at $formattedTime';
+    }
+    if ((now.difference(time).inHours / 24).round == 1) {
+      return 'Last seen yesterday at $formattedTime';
+    }
+    String month = getMonth(time);
+    return 'Last seen on ${time.day} $month on $formattedTime';
   }
 }

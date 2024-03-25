@@ -50,7 +50,7 @@ class ElavatedButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   Text(

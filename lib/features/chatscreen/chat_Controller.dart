@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:chitchat/core/models/user_data_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../firebaseservises/firebaseservice.dart';
@@ -13,13 +14,16 @@ class ChatController extends GetxController {
   bool showemogi = false;
   var isKeyboardVisible = false;
   bool iswriting = false;
+
   void settextfieldicon() {
     iswriting = !iswriting;
+
     update();
   }
 
   void showEmogi() {
     showemogi = !showemogi;
+    update();
   }
 
   // for sending the message

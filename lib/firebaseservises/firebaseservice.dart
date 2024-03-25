@@ -1,10 +1,14 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:chitchat/shared/widgets/helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart';
 
 import '../core/models/message.dart';
 
@@ -19,6 +23,65 @@ class FirebaseServises {
   static late UserData me;
   // currrent user getter
   static User get user => auth.currentUser!;
+
+  //////firebase messaging stuff<><><><>>>>>><<<<<<<<<>>>>>>>>>>>>>
+
+  // for firebase messaging in flutter
+  static FirebaseMessaging fbmessaging = FirebaseMessaging.instance;
+  // for getting token for messaging
+  static Future<void> gettingMessagingToken() async {
+    await fbmessaging.requestPermission();
+    await fbmessaging.getToken().then((t) {
+      if (t != null) {
+        print('token ::: $t');
+        me.pushToken = t;
+      }
+    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   log('Got a message whilst in the foreground!');
+    //   log('Message data: ${message.data}');
+
+    //   if (message.notification != null) {
+    //     log('Message also contained a notification: ${message.notification}');
+    //   }
+    // });
+  }
+
+  // send push notification
+  static Future<void> sendPushNotification(UserData users, String mesg) async {
+    try {
+      print("object????????");
+      print(users.pushToken);
+      final body = {
+        "to": users.pushToken,
+        "notification": {
+          "title": users.name,
+          "body": mesg,
+          "android_channel_id": "chats",
+        },
+        "data": {
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        },
+      };
+      var response =
+          await post(Uri.parse("https://fcm.googleapis.com/fcm/send"),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key=AAAA21bSSSk:APA91bEW-EldehBBJIAKSCuWjnwUlz5ZuF4-olbZdhBf5mQUruligj81YsOuvQzKAtGLRKIkHXDk2k0XR2zQbGBPGasxYE4S9u4chmcQ4_acEHilTKCzqOyayf4gKkzDd8hDhysKWRHn'
+              },
+              body: jsonEncode(body));
+      print(response.body);
+    } catch (e) {
+      print('error::::::::$e');
+    } finally {
+      print("finally");
+    }
+    // print(await http.read(Uri.https('example.com', 'foobar.txt')));
+  }
+
+  //messaging stuff end .........,,,,,,,,,,,,>>>>>>>>>>>
+
   // for checking the user exist or not
   static Future<bool> userexist() async {
     return (await firestore.collection('Users').doc(user.uid).get()).exists;
@@ -29,6 +92,9 @@ class FirebaseServises {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = UserData.fromJson(user.data()!);
+        await gettingMessagingToken();
+        //for updating user status to active
+        FirebaseServises.updateActiveStatus(true);
       } else {
         await createUser().then((value) => storeuser());
       }
@@ -125,7 +191,8 @@ class FirebaseServises {
         fromId: user.uid);
     final ref = firestore
         .collection('chats/${getConversationId(userdata.id)}/message/');
-    await ref.doc(time).set(message.toJson());
+    await ref.doc(time).set(message.toJson()).then((value) =>
+        sendPushNotification(userdata, type == Type.text ? msg : 'image'));
   }
 
   // update message read status
@@ -166,8 +233,19 @@ class FirebaseServises {
   }
 
   //online and last seen
-  //  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
-  //     UserData userData) {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
+      UserData userData) {
+    return firestore
+        .collection('Users')
+        .where('id', isEqualTo: userData.id)
+        .snapshots();
+  } //update active status
 
-  // }
+  static Future<void> updateActiveStatus(bool isonline) async {
+    firestore.collection('Users').doc(user.uid).update({
+      'is_online': isonline,
+      'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
+      'push_token': me.pushToken
+    });
+  }
 }

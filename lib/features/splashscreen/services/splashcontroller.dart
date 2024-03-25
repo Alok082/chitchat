@@ -1,11 +1,13 @@
+import 'dart:developer';
+
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
+import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class SplashController extends GetxController {
-  @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    // userdetail();
   }
 
   // print firebase user details

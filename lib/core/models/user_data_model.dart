@@ -33,16 +33,16 @@ class UserData {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['image'] = image;
-    _data['name'] = name;
-    _data['about'] = about;
-    _data['created_at'] = createdAt;
-    _data['is_online'] = isOnline;
-    _data['id'] = id;
-    _data['last_active'] = lastActive;
-    _data['email'] = email;
-    _data['push_token'] = pushToken;
-    return _data;
+    final data = <String, dynamic>{};
+    data['image'] = image;
+    data['name'] = name;
+    data['about'] = about;
+    data['created_at'] = createdAt;
+    data['is_online'] = isOnline;
+    data['id'] = id;
+    data['last_active'] = lastActive;
+    data['email'] = email;
+    data['push_token'] = pushToken;
+    return data;
   }
 }

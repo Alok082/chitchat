@@ -1,8 +1,10 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:get/get.dart';
 
 import 'core/theme/apptheme.dart';
@@ -19,7 +21,16 @@ void main() {
               projectId: "chit-chat-3e42a",
               storageBucket: "chit-chat-3e42a.appspot.com"))
       .then(
-    (value) {
+    (value) async {
+      var result =
+          await FlutterNotificationChannel().registerNotificationChannel(
+        description: 'For Showing Message Notification',
+        id: 'chats',
+        importance: NotificationImportance.IMPORTANCE_HIGH,
+        name: 'Chit_Chat',
+      );
+
+      log(result);
       setup();
       runApp(const MyApp());
     },

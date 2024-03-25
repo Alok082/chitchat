@@ -9,7 +9,7 @@ class ChatBottomsheet {
   static void showsheet(BuildContext context, UserData user) {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25), topRight: Radius.circular(25))),
       builder: (context) {
@@ -22,7 +22,7 @@ class ChatBottomsheet {
             //   "Choose profile picture",
             //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             // ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -64,7 +64,7 @@ class ChatBottomsheet {
                     ))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             )
           ],

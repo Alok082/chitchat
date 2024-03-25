@@ -8,11 +8,9 @@ import 'package:chitchat/features/profile/services/profilecontroller.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../../shared/buttons/elavatedbutton.dart';
 import '../widgets/bottomsheet.dart';
 
 class UserProfile extends StatelessWidget {
@@ -24,14 +22,14 @@ class UserProfile extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    var _authcontroller = locator<AuthController>();
-    var _profileController = locator<ProfileController>();
+    var authcontroller = locator<AuthController>();
+    var profileController = locator<ProfileController>();
 
     var mq = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
-        if (_profileController.visible == true) {
-          _profileController.changecontainerPosition();
+        if (profileController.visible == true) {
+          profileController.changecontainerPosition();
         }
         FocusScope.of(context).unfocus();
       },
@@ -53,17 +51,17 @@ class UserProfile extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 22.0),
+                                const SizedBox(height: 22.0),
                                 Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        _profileController
+                                        profileController
                                             .changecontainerPosition();
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.all(5),
+                                        padding: const EdgeInsets.all(5),
                                         height: mq.height * 0.22,
                                         width: mq.height * 0.22,
                                         decoration: BoxDecoration(
@@ -74,11 +72,10 @@ class UserProfile extends StatelessWidget {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(100),
-                                          child: _profileController.image !=
-                                                  null
+                                          child: profileController.image != null
                                               ? Image.file(
-                                                  File(_profileController
-                                                      .image!),
+                                                  File(
+                                                      profileController.image!),
                                                   fit: BoxFit.cover,
                                                 )
                                               : CachedNetworkImage(
@@ -86,7 +83,7 @@ class UserProfile extends StatelessWidget {
                                                   fit: BoxFit.fill,
                                                   imageUrl: userData.image,
                                                   placeholder: (context, url) =>
-                                                      CupertinoActivityIndicator(),
+                                                      const CupertinoActivityIndicator(),
                                                   errorWidget:
                                                       (context, url, error) =>
                                                           Image.asset(
@@ -98,20 +95,20 @@ class UserProfile extends StatelessWidget {
                                       ),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           right: 10, bottom: 10),
                                       // padding: EdgeInsets.all(5),
                                       height: mq.height * 0.045,
                                       width: mq.width * 0.095,
                                       decoration: BoxDecoration(
-                                          color: Color.fromARGB(
+                                          color: const Color.fromARGB(
                                               255, 168, 209, 241),
                                           // border: Border.all(color: Colors.black),
                                           borderRadius:
                                               BorderRadius.circular(100)),
                                       child: FittedBox(
                                         child: IconButton(
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.edit,
                                             size: 60,
                                           ),
@@ -124,15 +121,15 @@ class UserProfile extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 30.0),
+                                const SizedBox(height: 30.0),
                                 Text(
                                   userData.email,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 24.0,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
-                                SizedBox(height: 50.0),
+                                const SizedBox(height: 50.0),
                                 TextFormField(
                                   onSaved: (newValue) {
                                     FirebaseServises.me.name = newValue ?? '';
@@ -147,44 +144,44 @@ class UserProfile extends StatelessWidget {
                                   initialValue: userData.name,
                                   // controller: controller,
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 15),
+                                  style: const TextStyle(fontSize: 15),
                                   cursorHeight: 25,
 
                                   decoration: InputDecoration(
                                     hintText: "eg. Shivam pandey",
-                                    label: Text("Name"),
+                                    label: const Text("Name"),
                                     isDense: true, // Added this
-                                    contentPadding: EdgeInsets.all(10),
-                                    prefixIcon: Icon(Icons.person),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    prefixIcon: const Icon(Icons.person),
                                     filled: true,
-                                    fillColor:
-                                        Color.fromARGB(255, 168, 209, 241),
+                                    fillColor: const Color.fromARGB(
+                                        255, 168, 209, 241),
                                     disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                           color: Color.fromARGB(255, 6, 4, 4),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                     enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                           color: Color.fromARGB(255, 6, 4, 4),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(12)),
 
-                                    hintStyle: TextStyle(
+                                    hintStyle: const TextStyle(
                                         color:
                                             Color.fromARGB(240, 100, 100, 100)),
                                     border: OutlineInputBorder(
                                       gapPadding: Checkbox.width * 0.1,
                                       borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Color.fromARGB(255, 201, 6, 6),
                                       ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 30.0),
+                                const SizedBox(height: 30.0),
                                 TextFormField(
                                   onSaved: (newValue) {
                                     FirebaseServises.me.about = newValue ?? '';
@@ -200,34 +197,34 @@ class UserProfile extends StatelessWidget {
 
                                   // controller: controller,
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 15),
+                                  style: const TextStyle(fontSize: 15),
                                   cursorHeight: 25,
 
                                   decoration: InputDecoration(
                                     hintText: "Feeling Happy",
-                                    label: Text("About"),
-                                    prefixIcon: Icon(Icons.info_outline),
+                                    label: const Text("About"),
+                                    prefixIcon: const Icon(Icons.info_outline),
 
                                     isDense: true, // Added this
-                                    contentPadding: EdgeInsets.all(10),
+                                    contentPadding: const EdgeInsets.all(10),
                                     filled: true,
-                                    fillColor:
-                                        Color.fromARGB(255, 168, 209, 241),
+                                    fillColor: const Color.fromARGB(
+                                        255, 168, 209, 241),
 
                                     enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                           color: Color.fromARGB(255, 6, 4, 4),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(12)),
 
-                                    hintStyle: TextStyle(
+                                    hintStyle: const TextStyle(
                                         color:
                                             Color.fromARGB(240, 100, 100, 100)),
                                     border: OutlineInputBorder(
                                       gapPadding: Checkbox.width * 0.1,
                                       borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Color.fromARGB(255, 201, 6, 6),
                                       ),
                                     ),
@@ -274,7 +271,7 @@ class UserProfile extends StatelessWidget {
                                         width: double.infinity,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 5.0),
-                                        child: Center(
+                                        child: const Center(
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -284,7 +281,7 @@ class UserProfile extends StatelessWidget {
                                               ),
                                               Text(
                                                 "Update",
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   color: Color.fromARGB(
                                                       255, 255, 255, 255),
                                                   fontSize: 20.0,
@@ -297,37 +294,35 @@ class UserProfile extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 10.0),
+                                const SizedBox(height: 10.0),
                               ],
                             ),
                           ),
                         ),
                         AnimatedContainer(
-                            margin: EdgeInsets.symmetric(vertical: 150),
+                            margin: const EdgeInsets.symmetric(vertical: 150),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25)),
-                            height: _profileController.visible
-                                ? mq.height * 0.6
-                                : 0,
-                            width: _profileController.visible
-                                ? mq.height * 0.8
-                                : 0,
+                            height:
+                                profileController.visible ? mq.height * 0.6 : 0,
+                            width:
+                                profileController.visible ? mq.height * 0.8 : 0,
                             alignment: Alignment.center,
                             curve: Curves.linear,
-                            duration: Duration(milliseconds: 1000),
+                            duration: const Duration(milliseconds: 1000),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(25),
-                              child: _profileController.image != null
+                              child: profileController.image != null
                                   ? Image.file(
-                                      File(_profileController.image!),
+                                      File(profileController.image!),
                                       fit: BoxFit.cover,
                                     )
                                   : CachedNetworkImage(
                                       // height: ,
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.cover,
                                       imageUrl: userData.image,
                                       placeholder: (context, url) =>
-                                          CupertinoActivityIndicator(),
+                                          const CupertinoActivityIndicator(),
                                       errorWidget: (context, url, error) =>
                                           Image.asset(
                                         'asset/icons/applogo.png',
@@ -342,18 +337,18 @@ class UserProfile extends StatelessWidget {
                                 onPressed: () {
                                   locator<AuthController>().signout();
                                 },
-                                icon: Icon(Icons.logout))),
+                                icon: const Icon(Icons.logout))),
                         Visibility(
-                          visible: _authcontroller.isloading == true,
+                          visible: authcontroller.isloading == true,
                           child: Container(
                             height: mq.height * 1,
                             width: mq.width * 1,
-                            decoration: BoxDecoration(),
+                            decoration: const BoxDecoration(),
                             child: BackdropFilter(
                               filter:
                                   ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                               child: Container(
-                                color: Color.fromARGB(255, 168, 209, 241)
+                                color: const Color.fromARGB(255, 168, 209, 241)
                                     .withOpacity(
                                         0.4), // Adjust the opacity as needed
                               ),
@@ -361,8 +356,8 @@ class UserProfile extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                            visible: _authcontroller.isloading == true,
-                            child: Center(
+                            visible: authcontroller.isloading == true,
+                            child: const Center(
                                 child: CupertinoActivityIndicator(
                               color: Color.fromARGB(255, 255, 255, 255),
                               radius: 15,

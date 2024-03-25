@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/core/models/message.dart';
+import 'package:chitchat/features/homescreen/services/home_controller.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../core/models/user_data_model.dart';
+import '../../../dependency_injection.dart';
 import '../../../shared/widgets/date_time.dart';
 
 // ignore: must_be_immutable
@@ -24,7 +25,7 @@ class ChatUserCard extends StatelessWidget {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
               case ConnectionState.none:
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               case ConnectionState.active:
@@ -37,29 +38,36 @@ class ChatUserCard extends StatelessWidget {
                   messages = list[0];
                 }
                 return Card(
-                  color: Color.fromARGB(255, 19, 28, 23),
+                  color: const Color.fromARGB(255, 19, 28, 23),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
                         // padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(60)),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: CachedNetworkImage(
-                            // height: ,
-                            fit: BoxFit.fill,
-                            imageUrl: userdata.image,
-                            placeholder: (context, url) =>
-                                CupertinoActivityIndicator(),
-                            errorWidget: (context, url, error) => Image.asset(
-                              'asset/icons/applogo.png',
-                              fit: BoxFit.cover,
+                        child: InkWell(
+                          onTap: () {
+                            locator<HomeController>().viewpProfile(
+                              userdata.image,
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(60),
+                            child: CachedNetworkImage(
+                              // height: ,
+                              fit: BoxFit.fill,
+                              imageUrl: userdata.image,
+                              placeholder: (context, url) =>
+                                  const CupertinoActivityIndicator(),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'asset/icons/applogo.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -69,7 +77,7 @@ class ChatUserCard extends StatelessWidget {
                         children: [
                           Text(
                             userdata.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -80,16 +88,16 @@ class ChatUserCard extends StatelessWidget {
                                       : messages!.message
                                   : userdata.about,
                               maxLines: 1,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   overflow: TextOverflow.ellipsis)),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       if (messages != null) // Add this conditional statement
                         messages!.read.isEmpty &&
                                 messages!.fromId != FirebaseServises.user.uid
-                            ? Icon(
+                            ? const Icon(
                                 Icons.circle,
                                 color: Colors.lightGreenAccent,
                                 size: 15,
@@ -97,11 +105,11 @@ class ChatUserCard extends StatelessWidget {
                             : Text(
                                 MyDateTime.lastMessageTime(
                                     context: context, time: messages!.sent),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       )
                     ],

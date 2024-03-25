@@ -49,8 +49,13 @@ dependencies:
   sqflite: ^2.3.2
   image_picker: ^1.0.7
   firebase_storage: ^11.6.10
-  emoji_picker_flutter: ^2.1.1
-
+  # emoji_picker_flutter: ^1.5.2
+  emoji_selector: ^0.0.6
+  firebase_messaging: ^14.7.20
+  http: ^1.2.1
+  # for creating custom notification
+  flutter_notification_channel: ^3.1.0
+  page_transition: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

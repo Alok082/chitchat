@@ -18,6 +18,6 @@ class DynamicHelperWidget {
   static void showprogressbar(BuildContext context) {
     showDialog(
         context: context,
-        builder: (context) => Center(child: CupertinoActivityIndicator()));
+        builder: (context) => const Center(child: CupertinoActivityIndicator()));
   }
 }

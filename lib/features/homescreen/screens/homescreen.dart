@@ -1,59 +1,57 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:chitchat/core/constants/constant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/core/models/user_data_model.dart';
 import 'package:chitchat/features/homescreen/services/home_controller.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:chitchat/routes/app_routes.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import '../../../dependency_injection.dart';
-import '../widgets/chat_screen_card.dart';
+import '../widgets/contacts_card.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-class _HomeScreenState extends State<HomeScreen> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+
   bool _isTitleVisible = false;
-  void initState() {
-    super.initState();
-    FirebaseServises.storeuser();
-    _scrollController.addListener(() {
-      setState(() {
-        _isTitleVisible = _scrollController.offset >= 170;
-      });
-    });
-  }
+
+  @override
+  // void initState() {
+  //   super.initState();
+
+  //   _scrollController.addListener(() {
+  //     setState(() {
+  //       _isTitleVisible = _scrollController.offset >= 170;
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     var mq = MediaQuery.sizeOf(context);
-    var _controller = locator<HomeController>();
+    var controller = locator<HomeController>();
     return GestureDetector(
       onTap: () {
-        if (_controller.isSearching) {
+        if (controller.isSearching) {
           FocusManager.instance.primaryFocus!.unfocus();
-          _controller.changeSearch();
+          controller.changeSearch();
+        }
+        if (controller.viewprofile) {
+          controller.setvisibilityprofile();
         }
       },
       child: GetBuilder<HomeController>(
           init: HomeController(),
           builder: (_) {
             return Scaffold(
-              backgroundColor: Color.fromARGB(255, 168, 209, 241),
+              backgroundColor: const Color.fromARGB(255, 168, 209, 241),
               body: Stack(
                 children: [
                   CustomScrollView(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     controller: _scrollController,
                     slivers: [
                       SliverAppBar(
@@ -78,14 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         collapsedHeight: 60,
                         bottom: !_isTitleVisible
                             ? PreferredSize(
-                                preferredSize: Size(0, 0),
+                                preferredSize: const Size(0, 0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     IconButton(
                                         onPressed: () {},
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.home_outlined,
                                           color: Colors.white,
                                           size: 30,
@@ -95,23 +93,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Get.toNamed("/UserProfile",
                                               arguments: FirebaseServises.me);
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.person,
                                           color: Colors.white,
                                           size: 30,
                                         )),
                                     IconButton(
                                         onPressed: () {
-                                          print(_controller.isSearching);
-                                          _controller.changeSearch();
+                                          print(controller.isSearching);
+                                          controller.changeSearch();
                                         },
-                                        icon: _controller.isSearching
-                                            ? Icon(
+                                        icon: controller.isSearching
+                                            ? const Icon(
                                                 CupertinoIcons
                                                     .clear_circled_solid,
                                                 color: Colors.white,
                                               )
-                                            : Icon(
+                                            : const Icon(
                                                 Icons.search,
                                                 color: Colors.white,
                                                 size: 30,
@@ -153,36 +151,37 @@ class _HomeScreenState extends State<HomeScreen> {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.waiting:
                                 case ConnectionState.none:
-                                  return Center(
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 case ConnectionState.active:
                                 case ConnectionState.done:
                                   final data = snapshot.data?.docs;
-                                  _controller.userdatalist = data
+                                  controller.userdatalist = data
                                           ?.map((e) =>
                                               UserData.fromJson(e.data()))
                                           .toList() ??
                                       [];
 
-                                  if (_controller.userdatalist.isNotEmpty) {
+                                  if (controller.userdatalist.isNotEmpty) {
                                     return ListView.builder(
-                                      physics: AlwaysScrollableScrollPhysics(),
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemCount: _controller.isSearching
-                                          ? _controller.searchlist.length
-                                          : _controller.userdatalist.length,
+                                      itemCount: controller.isSearching
+                                          ? controller.searchlist.length
+                                          : controller.userdatalist.length,
                                       itemBuilder: (context, index) {
                                         return InkWell(
                                           onTap: () {
                                             Get.toNamed(AppRoutes.chatScreen,
-                                                arguments: _controller
+                                                arguments: controller
                                                     .userdatalist[index]);
                                           },
                                           child: ChatUserCard(
-                                            userdata: _controller.isSearching
-                                                ? _controller.searchlist[index]
-                                                : _controller
+                                            userdata: controller.isSearching
+                                                ? controller.searchlist[index]
+                                                : controller
                                                     .userdatalist[index],
                                           ),
                                         );
@@ -190,8 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   } else {
                                     return Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 200),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 200),
                                         child: Image.asset(
                                             "asset/icons/No_connection.png"));
                                   }
@@ -209,39 +208,89 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   Visibility(
-                    visible:
-                        _controller.isSearching && _isTitleVisible == false,
+                    visible: controller.isSearching && _isTitleVisible == false,
                     child: Positioned(
                         top: mq.height * 0.17,
                         // left: mq.width * 0.2,
                         child: Container(
-                            margin: EdgeInsets.all(5),
+                            margin: const EdgeInsets.all(5),
                             // color: Colors.blue,
                             // height: 50,
                             width: mq.width * 0.7,
                             child: TextFormField(
                               decoration: InputDecoration(
                                 hintText: "Name,Email...",
-                                contentPadding: EdgeInsets.all(10),
+                                contentPadding: const EdgeInsets.all(10),
                                 isDense: true,
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                     borderRadius: BorderRadius.circular(25)),
                                 filled: true,
-                                fillColor: Color.fromARGB(255, 168, 209, 241),
+                                fillColor:
+                                    const Color.fromARGB(255, 168, 209, 241),
                               ),
                               onChanged: (value) {
-                                _controller.searching(value);
+                                controller.searching(value);
                               },
                             ))),
-                  )
+                  ),
+                  Visibility(
+                    visible: controller.viewprofile,
+                    child: AnimatedContainer(
+                        margin: const EdgeInsets.symmetric(vertical: 150),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25)),
+                        height: controller.viewprofile ? mq.height * 0.6 : 0,
+                        width: controller.viewprofile ? mq.height * 0.8 : 0,
+                        alignment: Alignment.center,
+                        curve: Curves.linear,
+                        duration: const Duration(milliseconds: 1000),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+                              child: CachedNetworkImage(
+                                // height: ,
+                                fit: BoxFit.cover,
+                                imageUrl: controller.currentuserimage,
+                                placeholder: (context, url) =>
+                                    const CupertinoActivityIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                  'asset/icons/applogo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            // Positioned(
+                            //     right: 20,
+                            //     top: 25,
+                            //     child: Container(
+                            //       decoration: BoxDecoration(
+                            //           color: const Color.fromARGB(
+                            //               255, 255, 255, 255),
+                            //           borderRadius: BorderRadius.circular(100)),
+                            //       child: IconButton(
+                            //         icon: Icon(
+                            //           Icons.info_outline,
+                            //           size: 30,
+                            //         ),
+                            //         onPressed: () {
+                            //           Get.toNamed(AppRoutes.viewOthersProfile);
+                            //           controller.setvisibilityprofile();
+                            //         },
+                            //       ),
+                            //     ))
+                          ],
+                        )),
+                  ),
                 ],
               ),
               floatingActionButton: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: FloatingActionButton(
                   foregroundColor: Colors.black,
-                  backgroundColor: Color.fromARGB(255, 168, 209, 241),
+                  backgroundColor: const Color.fromARGB(255, 168, 209, 241),
                   elevation: 10,
                   // mini: true,
 
@@ -250,12 +299,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   //     style: BorderStyle.solid,
                   //     width: 10),
                   isExtended: true,
-                  splashColor: Color.fromARGB(255, 0, 0, 0),
+                  splashColor: const Color.fromARGB(255, 0, 0, 0),
                   onPressed: () {
                     // Add your onPressed logic here
                     print('FAB pressed');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.person_add,
                     size: 30,
                     color: Color.fromARGB(255, 0, 0, 0),

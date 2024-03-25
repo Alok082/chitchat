@@ -56,7 +56,7 @@ class ElavatedButtonWithImage extends StatelessWidget {
                     buttonicon,
                     height: 30,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   Text(

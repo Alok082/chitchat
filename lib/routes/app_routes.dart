@@ -2,7 +2,8 @@ import 'package:get/get.dart';
 
 import '../features/Splashscreen/screens/splashscreen.dart';
 import '../features/authentication/screens/loginscreen.dart';
-import '../features/chatscreen/chatscreen.dart';
+import '../features/chatscreen/screens/chatscreen.dart';
+import '../features/chatscreen/screens/view_others_profile.dart';
 import '../features/homescreen/screens/homescreen.dart';
 import '../features/profile/screens/userprofile.dart';
 
@@ -13,7 +14,7 @@ class AppRoutes {
 
   static const String homeScreen = '/HomeScreen';
 
-  // static const String bottomnavigationbar = '/Bottomnavigationbar';
+  static const String viewOthersProfile = '/ViewOthersProfile';
 
   static const String loginScreen = '/LoginScreen';
 
@@ -42,13 +43,13 @@ class AppRoutes {
       name: homeScreen,
       page: () => HomeScreen(),
     ),
-    // GetPage(
-    //   name: bottomnavigationbar,
-    //   page: () => Bottomnavigationbar(),
-    // ),
+    GetPage(
+      name: viewOthersProfile,
+      page: () => ViewOthersProfile(),
+    ),
     GetPage(
       name: loginScreen,
-      page: () => LoginScreen(),
+      page: () => const LoginScreen(),
     ),
     // GetPage(
     //   name: signupScreen,

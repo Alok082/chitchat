@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/firebaseservises/firebaseservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../core/models/message.dart';
 import '../../../shared/widgets/date_time.dart';
 
 class MessageCard extends StatelessWidget {
-  MessageCard({super.key, required this.message});
+  const MessageCard({super.key, required this.message});
   final Message message;
   @override
   Widget build(BuildContext context) {
@@ -27,8 +26,8 @@ class MessageCard extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
+            margin: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 19, 23, 16),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30),
@@ -42,7 +41,7 @@ class MessageCard extends StatelessWidget {
                 message.type == Type.text
                     ? Text(
                         message.message,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16,
                             color: Color.fromARGB(255, 255, 255, 255)),
                       )
@@ -53,7 +52,7 @@ class MessageCard extends StatelessWidget {
                           fit: BoxFit.fill,
                           imageUrl: message.message,
                           placeholder: (context, url) =>
-                              CupertinoActivityIndicator(),
+                              const CupertinoActivityIndicator(),
                           errorWidget: (context, url, error) => Image.asset(
                             'asset/icons/applogo.png',
                             fit: BoxFit.cover,
@@ -62,7 +61,7 @@ class MessageCard extends StatelessWidget {
                       ),
                 Visibility(
                   visible: message.read.isNotEmpty,
-                  child: Icon(
+                  child: const Icon(
                     Icons.done_all,
                     color: Color.fromARGB(255, 0, 245, 241),
                     size: 18,
@@ -72,12 +71,12 @@ class MessageCard extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(),
+        const SizedBox(),
         Padding(
           padding: const EdgeInsets.only(right: 15.0),
           child: Text(
             MyDateTime.formattedDateTime(context: context, time: message.sent),
-            style: TextStyle(
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(147, 14, 13, 13)),
           ),
@@ -94,15 +93,15 @@ class MessageCard extends StatelessWidget {
           padding: const EdgeInsets.only(left: 15.0),
           child: Text(
             MyDateTime.formattedDateTime(context: context, time: message.sent),
-            style: TextStyle(
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(147, 14, 13, 13)),
           ),
         ),
         Flexible(
           child: Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
+            margin: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 70, 153, 186),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30),
@@ -116,7 +115,7 @@ class MessageCard extends StatelessWidget {
                 message.type == Type.text
                     ? Text(
                         message.message,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16,
                             color: Color.fromARGB(255, 255, 255, 255)),
                       )
@@ -127,7 +126,7 @@ class MessageCard extends StatelessWidget {
                           fit: BoxFit.fill,
                           imageUrl: message.message,
                           placeholder: (context, url) =>
-                              CupertinoActivityIndicator(),
+                              const CupertinoActivityIndicator(),
                           errorWidget: (context, url, error) => Image.asset(
                             'asset/icons/applogo.png',
                             fit: BoxFit.cover,
@@ -136,7 +135,7 @@ class MessageCard extends StatelessWidget {
                       ),
                 Visibility(
                   visible: message.read.isNotEmpty,
-                  child: Icon(
+                  child: const Icon(
                     Icons.done_all,
                     color: Color.fromARGB(255, 0, 245, 241),
                     size: 18,
